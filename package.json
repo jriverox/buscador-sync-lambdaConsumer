@@ -1,0 +1,16 @@
+{
+  "name": "buscador-sync-consumer",
+  "version": "1.0.0",
+  "description": "Responsible for consumer a sqs message, then read data from source (mongodb) and finally bulk to elasticsearch.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.1.0",
+    "elasticsearch": "^16.4.0",
+    "mongodb": "^3.3.2"
+  }
+}
