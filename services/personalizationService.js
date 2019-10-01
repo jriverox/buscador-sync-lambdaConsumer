@@ -8,9 +8,6 @@ module.exports = class PersonalizationService{
         try {
             const hrstart = process.hrtime();
             let personalizations = await repository.find(synchronizationTask);
-            const fisrtId = personalizations.length > 0 ? personalizations[0]._id : "";
-            let logInfo = `Task Started: ${this.synchronizationTaskToString(synchronizationTask)}, rows: ${personalizations.length}, fisrtId: ${fisrtId}`;
-            console.log(logInfo); 
 
             if(personalizations && personalizations.length){
                 const bulkResponse = await this.bulkDocumentsToElastic(synchronizationTask, personalizations);
@@ -20,7 +17,7 @@ module.exports = class PersonalizationService{
             }
             const hrend = process.hrtime(hrstart);
             const execTime = `${(hrend[0] + hrend[1] / 1e9).toFixed(2)} seconds`;
-            logInfo = `Task Finised: ${this.synchronizationTaskToString(synchronizationTask)}, rows: ${personalizations.length}, Execution Time: ${execTime}`;
+            let logInfo = `Task Finised: ${this.synchronizationTaskToString(synchronizationTask)}, rows: ${personalizations.length}, Execution Time: ${execTime}`;
             console.log(logInfo); 
         } catch (error) {
             console.log("ERROR:", error);
@@ -29,8 +26,8 @@ module.exports = class PersonalizationService{
 
     synchronizationTaskToString(synchronizationTask){
         if(!synchronizationTask)
-            return "";
-        return `country:${synchronizationTask.country}|campaign:${synchronizationTask.campaign}|personalizationType:${synchronizationTask.personalizationType}|page:${synchronizationTask.page}`;
+            return "";        
+        return `${synchronizationTask.correlationId}/Page: ${synchronizationTask.page}`;
     }
 
     async bulkDocumentsToElastic(synchronizationTask, personalizations){
