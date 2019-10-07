@@ -2,8 +2,6 @@
 require("dotenv").config();
 
 const config = {
-    port: 3000,
-    batchSize: 30,
     mongodb: {
         PE: {
             connectionString: process.env.MONGODB_PE,
@@ -23,7 +21,7 @@ const config = {
         },        
         CR: {
             connectionString: process.env.MONGODB_CR,
-            database: "costaricadb"
+            database: "BelcorpCostaRica"
         }
     },
     elasticsearch:{
@@ -39,6 +37,14 @@ const config = {
         ],
         indexPrefix: "producto_v8",
         indexType: "_doc"
+    },
+    elasticLogging: {
+        endpoint: "https://search-qas-atd-f5uoi2tmrjd2i7rtdhfglnr7le.us-west-2.es.amazonaws.com",
+        pattern: "dev-buscador-sync2-",
+        type: "LogEvent",
+        enabledInfo: true,
+        enabledError: true,
+        application: "LambdaConsumer"
     }
 };
 

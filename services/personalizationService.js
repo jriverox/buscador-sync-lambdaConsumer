@@ -2,6 +2,7 @@ const PersonalizationRepository = require("../infrastructure/repositories/person
 const repository = new PersonalizationRepository();
 const elasticsearch = require('elasticsearch');
 const config = require("../config");
+const logManager = require("../infrastructure/logging/logManager.js")
 
 module.exports = class PersonalizationService{
     async executeTask(synchronizationTask){
@@ -15,13 +16,24 @@ module.exports = class PersonalizationService{
                     console.log("bulk Errors:", JSON.stringify(bulkResponse, null, '\t'));
                 }
             }
-            const hrend = process.hrtime(hrstart);
-            const execTime = `${(hrend[0] + hrend[1] / 1e9).toFixed(2)} seconds`;
-            let logInfo = `Task Finised: ${this.synchronizationTaskToString(synchronizationTask)}, rows: ${personalizations.length}, Execution Time: ${execTime}`;
-            console.log(logInfo); 
+            
+            let message = `Task Finised: ${this.synchronizationTaskToString(synchronizationTask)}, rows: ${personalizations.length}`;
+            this.logInfo(message, "executeTask", synchronizationTask, hrstart, personalizations.length);
         } catch (error) {
-            console.log("ERROR:", error);
+            this.logError(error, "createJob", synchronizationTask);
         }             
+    }
+
+    logInfo(message, method, synchronizationTask, hrstart, length){
+        const hrend = process.hrtime(hrstart);
+        const execTimeInMilis = hrend[0] + hrend[1] / 1e6;
+        console.log(message);     
+        logManager.logInfo("PersonalizationService", method, synchronizationTask, message, execTimeInMilis, synchronizationTask.country, length);        
+    }
+
+    logError(error, method, synchronizationTask){
+        console.log(error); 
+        logManager.logError("PersonalizationService", method, synchronizationTask.correlationId, error.message, synchronizationTask.country, error, "", "");        
     }
 
     synchronizationTaskToString(synchronizationTask){
