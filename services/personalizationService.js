@@ -17,7 +17,7 @@ module.exports = class PersonalizationService{
                 }
             }
             
-            let message = `Task Finised: ${this.synchronizationTaskToString(synchronizationTask)}, rows: ${personalizations.length}`;
+            let message = `Task Finished: ${this.synchronizationTaskToString(synchronizationTask)}, rows: ${personalizations.length}`;
             this.logInfo(message, "executeTask", synchronizationTask, hrstart, personalizations.length);
         } catch (error) {
             this.logError(error, "createJob", synchronizationTask);
@@ -52,17 +52,21 @@ module.exports = class PersonalizationService{
      
             let doc = {
                 codigoCampania: item.AnioCampanaVenta,
-                cuv: item.CUV,
                 tipoPersonalizacion: item.TipoPersonalizacion,
+                cuv: item.CUV,
+                productoResumenId: `${item.AnioCampanaVenta}.${item.CUV}.${item.TipoPersonalizacion}`,
                 codigoConsultora: item.CodConsultora,
                 diaInicio: item.DiaInicio,
-                flagRevista: item.FlagRevista,
-                materialGanancia: item.MaterialGanancia
+                revistaDigital: item.FlagRevista,
+                disponible: true,
+                materialGanancia: item.MaterialGanancia === 0 ? false : true,
             };                        
-
+            // { "update" : {"_id" : "2", "_type" : "_doc", "_index" : "index1", "retry_on_conflict" : 3} }
+            // { "doc" : {"field" : "value"}, "doc_as_upsert" : true }
             body.push(
-                { index:  { _index: indexName, _type: config.elasticsearch.indexType, _id: id } },
-                doc
+                //{ index:  { _index: indexName, _type: config.elasticsearch.indexType, _id: id } },
+                { update:  { _index: indexName, _type: config.elasticsearch.indexType, _id: id, retry_on_conflict: 3 } },
+                { doc : doc, doc_as_upsert: true }
             ); 
         }
 
