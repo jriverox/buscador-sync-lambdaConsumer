@@ -62,11 +62,8 @@ module.exports = class PersonalizationService{
                 revistaDigital: item.FlagRevista,
                 disponible: true,
                 materialGanancia: item.MaterialGanancia === 0 ? false : true,
-            };                        
-            // { "update" : {"_id" : "2", "_type" : "_doc", "_index" : "index1", "retry_on_conflict" : 3} }
-            // { "doc" : {"field" : "value"}, "doc_as_upsert" : true }
+            };
             body.push(
-                //{ index:  { _index: indexName, _type: config.elasticsearch.indexType, _id: id } },
                 { update:  { _index: indexName, _type: config.elasticsearch.indexType, _id: id, retry_on_conflict: 3 } },
                 { doc : doc, doc_as_upsert: true }
             ); 
