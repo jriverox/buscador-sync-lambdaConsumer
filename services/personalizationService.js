@@ -2,7 +2,9 @@ const PersonalizationRepository = require("../infrastructure/repositories/person
 const repository = new PersonalizationRepository();
 const elasticsearch = require('elasticsearch');
 const config = require("../config");
-const logManager = require("../infrastructure/logging/logManager.js")
+const logManager = require("../infrastructure/logging/logManager.js");
+const ElasticsearchConnection = require("../infrastructure/utils/elasticsearchConnection");
+const MongodbConnection = require("../infrastructure/utils/mongodbConnection");
 
 module.exports = class PersonalizationService{
     async executeTask(synchronizationTask){
@@ -82,13 +84,21 @@ module.exports = class PersonalizationService{
     }
 
     getElasticClient(country){
-        const endpoint = this.getElasticClusterEndpoint(country);
-        return new elasticsearch.Client({
-            host: endpoint
-        });
+        return ElasticsearchConnection.getConnection(country);
     }
 
     getPersonalizationId(campaign, cuv, personalizationType, consultant, startDay){
         return `${campaign}.${cuv}.${personalizationType}.${consultant}.${startDay}`;
+    }
+
+    async createConnections(countries) {
+        let es = await ElasticsearchConnection.createAllConnections(countries);
+        let mdb = await MongodbConnection.createAllConnections(countries);
+
+        if (es && mdb) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

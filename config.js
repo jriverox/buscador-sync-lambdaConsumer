@@ -3,36 +3,45 @@ require("dotenv").config();
 
 const config = {
     mongodb: {
-        PE: {
-            connectionString: process.env.MONGODB_PE,
-            database: "BelcorpPeru"
-        },
-        CL: {
-            connectionString: process.env.MONGODB_CL,
-            database: "BelcorpChile"
-        },        
-        PA: {
-            connectionString: process.env.MONGODB_PA,
-            database: "BelcorpPanama"
-        },
-        CO: {
-            connectionString: process.env.MONGODB_CO,
-            database: "BelcorpColombia"
-        },        
-        CR: {
-            connectionString: process.env.MONGODB_CR,
-            database: "BelcorpCostaRica"
-        }
+        clusters: [
+            {
+                endpoint: process.env.MONGODB_C1,
+                countries: {
+                    CO: "BelcorpColombia",
+                    BO: "BelcorpBolivia",
+                    SV: "BelcorpSalvador",
+                    PR: "BelcorpPuertoRico"
+                }
+            },
+            {
+                endpoint: process.env.MONGODB_C2,
+                countries: {
+                    PE: "BelcorpPeru",
+                    CL: "BelcorpChile",
+                    GT: "BelcorpGuatemala",
+                    PA: "BelcorpPanama"
+                }
+            },
+            {
+                endpoint: process.env.MONGODB_C3,
+                countries: {
+                    MX: "BelcorpMexico",
+                    EC: "BelcorpEcuador",
+                    DO: "BelcorpDominicana",
+                    CR: "BelcorpCostaRica_GANAMAS"
+                }
+            }
+        ]
     },
-    elasticsearch:{
+    elasticsearch: {
         clusters: [
             {
                 endpoint: process.env.ELASTICSEARCH_C1,
-                countries: ["PE","CL", "CR"]
+                countries: ["PE", "CL", "CR"]
             },
             {
                 endpoint: process.env.ELASTICSEARCH_C2,
-                countries: [ "CO", "PA" ]
+                countries: ["CO", "PA"]
             }
         ],
         indexPrefix: "producto_v8",
