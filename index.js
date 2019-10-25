@@ -7,7 +7,7 @@ const Utils = require("./infrastructure/utils/utils");
 exports.handler = async (event, context) => {
   const hrstart = process.hrtime();
   let countries = Utils.getCountriesArray(event.Records);
-  let connection = service.createConnections(countries);
+  let connection = await service.createConnections(countries);
 
   if (connection) {
     let firstTask;
