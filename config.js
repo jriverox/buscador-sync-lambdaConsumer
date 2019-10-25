@@ -2,6 +2,7 @@
 require("dotenv").config();
 
 const config = {
+    enabledCountries: ["CL", "CO", "CR", "PE", "PA"],
     mongodb: {
         clusters: [
             {

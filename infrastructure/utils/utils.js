@@ -23,7 +23,7 @@ module.exports = class Utils {
             const body = JSON.parse(item.body);
 
             if (!result.some((x) => x.toLocaleLowerCase() === body.country.toLocaleLowerCase())) {
-                result.push(body.product.pais);
+                result.push(body.country);
             }
         }
 
