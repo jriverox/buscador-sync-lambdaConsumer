@@ -44,11 +44,11 @@ const config = {
                 countries: ["CO", "PA"]
             }
         ],
-        indexPrefix: "producto_v8",
+        indexPrefix: "producto_v2",
         indexType: "_doc"
     },
     elasticLogging: {
-        endpoint: "https://search-qas-atd-f5uoi2tmrjd2i7rtdhfglnr7le.us-west-2.es.amazonaws.com",
+        endpoint: process.env.LOGGER_URL,
         pattern: "dev-buscador-sync2-",
         type: "LogEvent",
         enabledInfo: true,
