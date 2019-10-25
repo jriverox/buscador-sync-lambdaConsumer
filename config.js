@@ -34,7 +34,7 @@ const config = {
             }
         ]
     },
-    elasticsearch: {
+    elasticSearch: {
         clusters: [
             {
                 endpoint: process.env.ELASTICSEARCH_C1,

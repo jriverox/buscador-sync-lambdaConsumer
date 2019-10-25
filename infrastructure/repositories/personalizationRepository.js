@@ -1,5 +1,5 @@
-const mongoClient = require("mongodb").MongoClient;
-const config = require("../../config");
+//const mongoClient = require("mongodb").MongoClient;
+//const config = require("../../config");
 const collectionName = "OfertaPersonalizada";
 const MongoConnection = require("../utils/mongodbConnection");
 
@@ -25,8 +25,6 @@ module.exports = class PersonalizationRepository {
                 .toArray();
         } catch (error) {
             throw new Error(error);
-        } finally {
-            client.close();
-        }
+        } 
     }
 }
