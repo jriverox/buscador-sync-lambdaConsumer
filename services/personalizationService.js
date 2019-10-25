@@ -47,7 +47,7 @@ module.exports = class PersonalizationService{
     async bulkDocumentsToElastic(synchronizationTask, personalizations){
         let body = [];
         const elasticClient = this.getElasticClient(synchronizationTask.country);
-        const indexName = `${config.elasticsearch.indexPrefix}_${synchronizationTask.country.toLowerCase()}_${synchronizationTask.campaign}`;
+        const indexName = `${config.elasticSearch.indexPrefix}_${synchronizationTask.country.toLowerCase()}_${synchronizationTask.campaign}`;
         
         for (const item of personalizations) {
             let id = this.getPersonalizationId(item.AnioCampanaVenta, item.CUV, item.TipoPersonalizacion, item.CodConsultora, item.DiaInicio);
@@ -64,7 +64,7 @@ module.exports = class PersonalizationService{
                 materialGanancia: item.MaterialGanancia === 0 ? false : true,
             };
             body.push(
-                { update:  { _index: indexName, _type: config.elasticsearch.indexType, _id: id, retry_on_conflict: 3 } },
+                { update:  { _index: indexName, _type: config.elasticSearch.indexType, _id: id, retry_on_conflict: 3 } },
                 { doc : doc, doc_as_upsert: true }
             ); 
         }
@@ -74,7 +74,7 @@ module.exports = class PersonalizationService{
     }
 
     getElasticClusterEndpoint(country){
-        const cluster = config.elasticsearch.clusters.find(item => {
+        const cluster = config.elasticSearch.clusters.find(item => {
             return item.countries.some( x => {return x.toUpperCase() === country.toUpperCase();});
         });
         return cluster.endpoint;
